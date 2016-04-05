@@ -1,0 +1,29 @@
+package com.gil.springbootjar;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
+import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
+import org.springframework.boot.context.web.SpringBootServletInitializer;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@EnableAutoConfiguration
+public class Example extends SpringBootServletInitializer implements EmbeddedServletContainerCustomizer {
+	@RequestMapping("/")
+	String home() {
+		return "Hello World!";
+	}
+
+	public static void main(String[] args) {
+		SpringApplication.run(Example.class, args);
+		// 添加进程结束时的处理
+		Runtime.getRuntime().addShutdownHook(new Thread(new ShutdownHookThread()));
+	}
+
+	@Override
+	public void customize(ConfigurableEmbeddedServletContainer container) {
+		container.setPort(8008);
+	}
+}
